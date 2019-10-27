@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  gcloud:
+    image: google/cloud-sdk:latest
+    tty: true
+    volumes:
+      - ./src:/src:cached
+  ruby25:
+    build: ./containers/ruby25
+    volumes:
+      - ./src/:/app
+    tty: true
+    ports:
+      - "3000:3000"
+    links:
+      - mysql
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./tmp/db/:/var/lib/mysql
